@@ -44,6 +44,7 @@
 %       knnSorted(k,1) = the average number of nearest neighbors that 
 %       nodes with degree k have knnSorted(k,2) = the number of nodes
 %       with k that went into that average
+%   weights: the strengths of each node i and time m
 
 
 % tic
@@ -200,11 +201,11 @@ sFunction(:,1) = sFunction(:,1)./sFunction(:,2);
 if randomizeTime == 1
     save('edgeDistributionRandTime.mat','R','averagek',...
         'variancek','N','PAllNodes','POnlyParticipants',...
-        'knn','k','kikj','knnweighted','averageknn','sFunction')
+        'knn','k','kikj','knnweighted','averageknn','sFunction','weights')
 else
     save('edgeDistribution.mat','R','averagek',...
         'variancek','N','PAllNodes','POnlyParticipants',...
-        'knn','k','kikj','knnweighted','averageknn','sFunction')
+        'knn','k','kikj','knnweighted','averageknn','sFunction','weights')
 end
 
 
