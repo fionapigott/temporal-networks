@@ -298,6 +298,14 @@ xlabel('Degree of i (k_i)')
 ylabel('Average value of s_i')
 title('Strength of the node (s_i) as a function of k')
 hold off
+%% Clustering coefficient
+plot(1:max(max(k)),CFunction,'.')
+set(gca,'FontSize',12);
+set(findall(gcf,'type','text'),'FontSize',12);
+%Label Axes and Set Title
+xlabel('Degree of i (k_i)')
+ylabel('Average value of c_i')
+title('Clustering coefficient of the node (c_i) as a function of k')
 %% % Save the graphs
 print(GNEperMonth,'-depsc','GNEperMonth.eps');
 %close(GNEperMonth)

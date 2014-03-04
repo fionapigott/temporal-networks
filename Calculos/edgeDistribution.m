@@ -44,7 +44,7 @@
 %       knnSorted(k,1) = the average number of nearest neighbors that 
 %       nodes with degree k have knnSorted(k,2) = the number of nodes
 %       with k that went into that average
-%   weights: the strengths of each node i and time m
+%   s: the strengths of each node i and time m
 
 
 % tic
@@ -188,10 +188,9 @@ end
 % ------------------------------------------------------------------
 % sFunction(k) = the average value of s that nodes with degree k have
 sFunction = zeros(max(max(k)),2);
-weights = squeeze(sum(data,2));
 for n = 1:(nummat*numnodes)
     if k(n) ~= 0
-        sFunction(k(n),1) = sFunction(k(n),1) + weights(n);
+        sFunction(k(n),1) = sFunction(k(n),1) + s(n);
         sFunction(k(n),2) = sFunction(k(n),2) + 1;
     end
 end
@@ -201,11 +200,11 @@ sFunction(:,1) = sFunction(:,1)./sFunction(:,2);
 if randomizeTime == 1
     save('edgeDistributionRandTime.mat','R','averagek',...
         'variancek','N','PAllNodes','POnlyParticipants',...
-        'knn','k','kikj','knnweighted','averageknn','sFunction','weights')
+        'knn','k','kikj','knnweighted','averageknn','sFunction','s')
 else
     save('edgeDistribution.mat','R','averagek',...
         'variancek','N','PAllNodes','POnlyParticipants',...
-        'knn','k','kikj','knnweighted','averageknn','sFunction','weights')
+        'knn','k','kikj','knnweighted','averageknn','sFunction','s')
 end
 
 

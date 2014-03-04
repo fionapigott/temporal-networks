@@ -38,9 +38,9 @@ ci = zeros(numnodes,nummat);
 ciweighted = ci;
 for m = 1:nummat
     for ii = 1:numnodes % for all nodes
-        if weights(ii,m) ~=0 % if the node has interactions with other 
+        if s(ii,m) ~=0 % if the node has interactions with other 
             % nodes calculate the weight factor
-            weightFactor = 1/(weights(ii,m));
+            weightFactor = 1/(s(ii,m));
             degreeFactor = 1/(k(ii,m));
             tripletFactor = 1/(k(ii,m)-1);
             for jj = 1:ii-1 % unique combos of i & j, i =/= j

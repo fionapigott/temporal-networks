@@ -21,7 +21,7 @@ load('Graphs.mat') % name of adjacency matricies -> 'data'
 % will not generate fake data
 % Choose an option by setting it to "1"
 randomizeTime = 0;
-randomizeInfection = 0;
+randomizeInfection = 1;
 % Script below loads internet adoption data from a .mat file.
 % Save data as a matrix 'Adoption' with dim (# nodes) X (# time steps)
 % '1' indicates that the user at that node has adopted internet
@@ -40,11 +40,6 @@ AdoptionStats
 % % Or just load the data
 % load('AdoptionStats.mat')
 
-% Calculate Network Exposure for not-yet adopters
-NetworkExposures
-% % Or just load the data
-% load('NetworkExposure.mat')
-
 % Calculate temporal correlation coefficient
 TempCorrCoeff
 % TempCorrCoeffAllCombos
@@ -53,8 +48,14 @@ TempCorrCoeff
 
 % Calculate the probabilty distributions of edges
 edgeDistribution
+ClusteringCoeff
 % % Or just load the data
 % load('edgeDistribution.mat')
+
+% Calculate Network Exposure for not-yet adopters
+NetworkExposures
+% % Or just load the data
+% load('NetworkExposure.mat')
 
 % Graph Everything
 cd('..')
