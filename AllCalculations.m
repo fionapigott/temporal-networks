@@ -21,7 +21,7 @@ load('Graphs.mat') % name of adjacency matricies -> 'data'
 % will not generate fake data
 % Choose an option by setting it to "1"
 randomizeTime = 0;
-randomizeInfection = 1;
+randomizeInfection = 0;
 % Script below loads internet adoption data from a .mat file.
 % Save data as a matrix 'Adoption' with dim (# nodes) X (# time steps)
 % '1' indicates that the user at that node has adopted internet
