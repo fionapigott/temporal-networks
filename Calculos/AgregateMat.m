@@ -91,5 +91,5 @@ cd('..')
 cd('Calculos')
 
 % save 'data' as a .mat file
-save('Graphs')
+save('Graphs.mat','data','unweighted','numnodes','nummat')
 % toc
