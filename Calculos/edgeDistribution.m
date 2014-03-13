@@ -23,7 +23,7 @@
 %      participating node having k nearest neighbors.
 %   PAllNodes: Dimention (max # of nearest neighbors for a node 
 %      in the data set) X (# time steps). P(k,m) is the probability of
-%      any node having k nearest neighbors in the time step m.
+%      any node having k-1 nearest neighbors in the time step m.
 %   PsOnlyParticipants: Dimention (max strength of any node 
 %      in the data set) X (# time steps). P(s,m) is the probability of a
 %      participating node having strength s.
@@ -41,9 +41,7 @@
 %      knnweighted: weighted average nearest neighbors degreee. same dim/
 %      properties as knn. Formula from TareasV1.pdf #12
 %   sFunction: the weight of the node i as a function of its degree.
-%       knnSorted(k,1) = the average number of nearest neighbors that 
-%       nodes with degree k have knnSorted(k,2) = the number of nodes
-%       with k that went into that average
+%       sFunction(k) = the average strength of a node i with degree k.
 %   s: the strengths of each node i and time m
 
 
@@ -133,7 +131,7 @@ end
 %toc
 
 %-----------------------------------------------------------------------
-% Knn
+%% Knn
 % Calculate the actual nearest neighbors degree
 knn = zeros(numnodes,nummat);
 for m = 1:nummat % For time steps m
@@ -186,7 +184,7 @@ for m = 1:nummat
 end
 
 % ------------------------------------------------------------------
-% sFunction(k) = the average value of s that nodes with degree k have
+%% sFunction(k) = the average value of s that nodes with degree k have
 sFunction = zeros(max(max(k)),2);
 for n = 1:(nummat*numnodes)
     if k(n) ~= 0
