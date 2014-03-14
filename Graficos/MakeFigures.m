@@ -13,7 +13,7 @@ dateStr = char('01-01-1998', '02-01-1998', '03-01-1998', '04-01-1998', ...
     '08-01-1999', '09-01-1999', '10-01-1999', '11-01-1999', '12-01-1999',...
     '01-01-2000', '02-01-2000', '03-01-2000', '04-01-2000', '05-01-2000',...
     '06-01-2000', '07-01-2000', '08-01-2000', '09-01-2000', '10-01-2000',...
-    '11-01-2000', '12-01-2000', '01-01-2001', '02-01-2001', '03-01-2001',...
+    '11-01-2000', '12-01-2000', '01-01-2001', '02-01-2001', ...
     '04-01-2001', '05-01-2001', '06-01-2001', '07-01-2001', '08-01-2001',...
     '09-01-2001', '10-01-2001', '11-01-2001', '12-01-2001', '01-01-2002',...
     '02-01-2002', '03-01-2002', '04-01-2002', '05-01-2002', '06-01-2002',...
@@ -33,7 +33,7 @@ dateStr = char('01-01-1998', '02-01-1998', '03-01-1998', '04-01-1998', ...
     '12-01-2007');
 dates = datenum(dateStr);
 %% Graph the Global Network Exposure for each month--------------------
-% %Plot Data
+%Plot Data
 GNEperMonth = figure('name','GNEperMonth');
 % subplot(2,2,2)
 plot(dates, GNE,'-ob','MarkerSize',3)
@@ -60,11 +60,11 @@ end
 %% Graph adopters per month--------------------------------------------
 AdoptersperMonth = figure('name','AdoptersperMonth');
 hold on
-h1 = plot(dates, sum(Adoption,1),'-ob','MarkerSize',3);
-h2 = plot(dates, transitions(1,:),'-om','MArkerSize',3);
+plot(dates, sum(Adoption,1),'-ob','MarkerSize',3);
+plot(dates, transitions(1,:),'-om','MArkerSize',3);
 plot(dates, sum(Adoption,1))
 plot(dates, transitions(1,:),'m')
-label = legend([h1 h2], {'Total Adopters','New Adopters'});
+label = legend('Total Adopters','New Adopters');
 set(label,'Location','NorthWest')
 hold off
 %Set Ticks
@@ -94,7 +94,7 @@ hold on
 plot(dates,transitions(2,:),'-og','MarkerSize',3)
 plot(dates,transitions(3,:),'-or','MarkerSize',3)
 plot(dates,transitions(2,:)+transitions(3,:),'-ok','MarkerSize',3)
-plot(dates,zeros(1,118),'k--')
+plot(dates,zeros(size(dates)),'k--')
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
 %Set Ticks
@@ -122,15 +122,15 @@ clear label
 %% Graph the GNE for each month vs total adopters per month-------------
 GNEvsTotalAdopters = figure('name','GNEvsTotalAdopters');
 hold on
-plot(GNE,sum(Adoption,1),'.') 
+plot(sum(Adoption,1),GNE,'.') 
 x = 1:max(GNE);
 plot(x,x*AdoptGNEline(1)+AdoptGNEline(2))
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
 %Label Axes and Set Title
-ylabel('Total Internet Adopters')
-xlabel('Global Network Exposure')
-title('Total Adopters per month vs GNE per month')
+xlabel('Total Internet Adopters')
+ylabel('Global Network Exposure')
+title('GNE per month vs total adopters per month')
 slope = num2str(roundn(AdoptGNEline(1),-2));
 int = num2str(roundn(AdoptGNEline(2),-2));
 text(x(end)-10,x(end)/2*AdoptGNEline(1)+AdoptGNEline(2),{'Adoption(GNE) = ',[slope,...
@@ -153,8 +153,8 @@ plot(dates, R, '-or','MarkerSize',3);
 plot(dates,averageknn,'-og','MarkerSize',3);
 axis([dates(1) dates(end) 5 24])
 %Set Ticks
-labels = datestr(dates(1:12:118), 'yyyy');
-set(gca, 'XTick', dates(1:12:118));
+labels = datestr(dates(1:12:117), 'yyyy');
+set(gca, 'XTick', dates(1:12:117));
 set(gca, 'XTickLabel', labels);
 rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
                          % mathworks forums. refer to liscensing info                         
@@ -200,7 +200,7 @@ hold off
 %% Currently unused: Weighted knn-----------------
 % knnW =figure('name','knnW');
 % hold on
-% plot(knn(:,[1 60 118]), knnweighted(:,[1 60 118]),'.');   
+% plot(knn(:,[1 60 117]), knnweighted(:,[1 60 117]),'.');   
 % set(gca,'FontSize',12);
 % set(findall(gcf,'type','text'),'FontSize',12);
 % %Label Axes and Set Title
@@ -216,7 +216,7 @@ hold off
 ProbDistk = figure('name','ProbDistk');
 hold on
 plot(mean(POnlyParticipants,2),'k','LineWidth',2)
-plot(POnlyParticipants(:,[1 60 118]))
+plot(POnlyParticipants(:,[1 59 117]))
 axis([1,80,0,.08])
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
@@ -256,37 +256,30 @@ hold off
 
 %----------------------------------------------------------------------
 %% Overlap (commented out, no need to re-graph)
-% %Doesn't change, and it's re-calculated unless you run "TempCorrCoeffAll"
-% %so don't plot it every time
-% OverlapPlot = figure('name','OverlapPlot');
-% pcolor(dates,dates,overlap);
-% shading flat
-% axis square
-% colorbar%('location','southoutside')
-% title('Topological overlap between all time steps')
-% %xlabel('Month (m)')
-% %ylabel('Month (n)')
-% %Set Ticks
-% labels = datestr(dates(1:12:120), 'yyyy');
-% set(gca, 'XTick', dates(1:12:120));
-% set(gca, 'XTickLabel', labels);
-% set(gca, 'YTick', dates(1:12:120));
-% set(gca, 'YTickLabel', labels);
-% rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
-%                          % mathworks forums. refer to liscensing info 
-% set(gca,'FontSize',12)
-% set(findall(gcf,'type','text'),'FontSize',12)
+%Doesn't change, and it's re-calculated unless you run "TempCorrCoeffAll"
+%so don't plot it every time
+OverlapPlot = figure('name','OverlapPlot');
+pcolor(dates,dates,overlap);
+shading flat
+axis square
+colorbar%('location','southoutside')
+title('Topological overlap between all time steps')
+%xlabel('Month (m)')
+%ylabel('Month (n)')
+%Set Ticks
+labels = datestr(dates(1:12:120), 'yyyy');
+set(gca, 'XTick', dates(1:12:120));
+set(gca, 'XTickLabel', labels);
+set(gca, 'YTick', dates(1:12:120));
+set(gca, 'YTickLabel', labels);
+rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+                         % mathworks forums. refer to liscensing info 
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
 %--------------------------------------------------------------------
 
 %-------------------------------------------------------------------
-%% if...
 
-if randomizeTime == 1
-    cd('RandomTimes')
-end
-if randomizeInfection == 1
-    cd('RandomInfection')
-end
 %----------------------------------------------------------------------
 %% Sum vs k
 svsk = figure('name','svsk');
@@ -299,6 +292,7 @@ ylabel('Average value of s_i')
 title('Strength of the node (s_i) as a function of k')
 hold off
 %% Clustering coefficient
+clusteringcoeff = figure('name','clusteringcoeff');
 plot(1:max(max(k)),CFunction,'.')
 set(gca,'FontSize',12);
 set(findall(gcf,'type','text'),'FontSize',12);
@@ -306,23 +300,65 @@ set(findall(gcf,'type','text'),'FontSize',12);
 xlabel('Degree of i (k_i)')
 ylabel('Average value of c_i')
 title('Clustering coefficient of the node (c_i) as a function of k')
+%% <PNE> adopters, <PNE> all
+PNEdiff = figure('name','PNEdiff');
+hold on
+%plot(dates(1:end),diffPNEFirstorig,'.k','MarkerSize',10)
+%plot(dates,PNEAvgTotalExposureOrig,'k','LineWidth',2)
+plot(dates(1:end),diffPNEFirst,'.b','MarkerSize',10)
+plot(dates,PNEAvgTotalExposure,'b','LineWidth',2)
+%plot(dates(1:end),diffPNEFirst,'.m')
+%'Average PNE of first-time adopters at m',...
+    %'Average PNE of all nodes at m',...
+label = legend('Average PNE of adopters at m',...
+    'Average PNE of all nodes at m');
+    %'First instance of adoption in the node (first time adopter)');
+set(label,'Location','NorthWest')
+%Set Ticks
+labels = datestr(dates(1:12:120), 'yyyy');
+set(gca, 'XTick', dates(1:12:120));
+set(gca, 'XTickLabel', labels);
+rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+                         % mathworks forums. refer to liscensing info                         
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+%Label Axes and Set Title
+xlabel('Date')
+ylabel('<PNE>_m')%/<PNE>_m')
+title({'PNE of adopters and non-adopters per month'})
+hold off
 %% % Save the graphs
+%% if...
+
+if randomizeTime == 1
+    cd('RandomTimes')
+end
+if randomizeInfection == 1
+    cd('RandomInfection')
+end
+
 print(GNEperMonth,'-depsc','GNEperMonth.eps');
 %close(GNEperMonth)
 print(AdoptersperMonth,'-depsc','AdoptersperMonth.eps'); 
-%close(AdoptersperMonth)
+% close(AdoptersperMonth)
 print(GNEvsTotalAdopters,'-depsc','GNEvsTotalAdopters.eps');
-%close(GNEvsTotalAdopters)
+% close(GNEvsTotalAdopters)
+%savefig(GNEvsTotalAdopters,'GNEvsTotalAdopters.fig');
 print(NearestNeighbors,'-depsc','NearestNeighbors.eps'); 
-%close(NearestNeighbors)
+% close(NearestNeighbors)
 print(ProbDistk,'-depsc','ProbDistk.eps'); 
-%close(ProbDist)
+% close(ProbDistk)
 print(knnvsk,'-depsc','knnvsk.eps'); 
-%close(knnvsk)
+% close(knnvsk)
 print(svsk,'-depsc','svsk.eps'); 
-%close(svsk)
+% close(svsk)
 print(trans,'-depsc','trans.eps'); 
-% print(OverlapPlot,'-depsc','overlap.eps'); 
+% close(trans)
+print(OverlapPlot,'-depsc','overlap.eps'); 
+print(clusteringcoeff,'-depsc','clusteringcoeff.eps')
+% close(clusteringcoeff)
+print(PNEdiff,'-depsc','PNEdiff.eps')
+% close(PNEdiff)
 
 if randomizeTime == 1
     cd('..')
@@ -332,7 +368,7 @@ if randomizeInfection == 1
 end
 
 clear GNEperMonth AdoptersperMonth NewAdoptersperMonth GNEvsNewAdopters
-clear RperMonth kperMonth k2perMonth startDate endDate dates Adoptersvsk
+clear RperMonth kperMonth k2perMonth startDate endDate Adoptersvsk %dates
 clear edgeDistribution networkExposure
 
 
