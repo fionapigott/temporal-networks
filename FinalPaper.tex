@@ -47,6 +47,22 @@ February 2001 has approximately the same number of edges and weights in the grap
 
 In the months May 2004 and November 2007, while the number of links between nodes on the graph does not seem to change drastically, the total weight of the graph spikes to approximately double the total in any other month. Because this analysis largely deals with the unweighted graph these data sets are still used.
 
+\section{Adoption over time}
+
+Metrics showing adoption, or ``infection," over time. A first time adoption is the first time a node adopts, and each node can nay appear once in calculation involving first time adoptions. Generally, adoption only means a \(0 \rightarrow 1\) transition, and a node can transition more than once.
+
+\begin{figure}[H]
+\includegraphics[width = .7\textwidth]{Graficos/AdoptersperMonth.eps}
+\caption{Plot showing the number of adopters per month. Note that the number of new adopters per month does not change greatly and the number of total adopters grows linearly.}
+\label{fig:AdoptersperMonth}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width = .7\textwidth]{Graficos/trans.eps}
+\caption{Fluctuations per month. Green shows the number of people who transition from susceptible to infected (S \(\rightarrow\) I), red the number of people who transition from infected to recovered (I \(\rightarrow\) R), and black the net change in the total number of adoptions for the given month.}
+\label{fig:trans}
+\end{figure}
+
 \section{Topology of the social network over time}
 
 \subsection{Neighborhood topological overlap}
