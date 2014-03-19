@@ -123,7 +123,7 @@ clear label
 GNEvsTotalAdopters = figure('name','GNEvsTotalAdopters');
 hold on
 plot(sum(Adoption,1),GNE,'.') 
-x = 1:max(GNE);
+x = 1:max(sum(Adoption,1));
 plot(x,x*AdoptGNEline(1)+AdoptGNEline(2))
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
@@ -151,7 +151,7 @@ hold on
 plot(dates, averagek,'-ob','MarkerSize',3);
 plot(dates, R, '-or','MarkerSize',3);
 plot(dates,averageknn,'-og','MarkerSize',3);
-axis([dates(1) dates(end) 5 24])
+axis([dates(1) dates(end) 0 max(averageknn)+5])
 %Set Ticks
 labels = datestr(dates(1:12:117), 'yyyy');
 set(gca, 'XTick', dates(1:12:117));
@@ -162,17 +162,17 @@ set(gca,'FontSize',12);
 set(findall(gcf,'type','text'),'FontSize',12);
 %Label Axes and Set Title
 xlabel('Date')
-ylabel('Number of Neighbors')
-title('Nearest Neighbor Estimations vs Time')
-label = legend('<k>','R','<k_{nn}>');
+ylabel('Degree')
+title('Degree Estimations vs Time')
+label = legend('<k>','<k^2>/<k>','<k_{nn}>');
 set(label,'Location','NorthEast');
 clear label
 if randomizeTime == 1
-    title({'Nearest Neighbor Estimations vs Time';...
+    title({'Degree Estimations vs Time';...
         'for a randomly ordered time series'})
 end
 if randomizeInfection == 1
-    title({'Nearest Neighbor Estimations vs Time';...
+    title({'Degree Estimations vs Time';...
         'for randomly generated infection data'})
 end
 hold off
@@ -220,8 +220,8 @@ plot(POnlyParticipants(:,[1 59 117]))
 axis([1,80,0,.08])
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
-xlabel('Number of nearest neighbors k')
-ylabel('Fraction of nodes with k nearest neighbors')
+xlabel('degree (k)')
+ylabel('Fraction of nodes with degree k')
 label = legend('Avg for All Months','Jan 1998','Jan 2003','Dec 2007');
 set(label,'Location','NorthEast')
 title('Probability distribution of the degree of nodes in the network')
@@ -256,26 +256,26 @@ hold off
 
 %----------------------------------------------------------------------
 %% Overlap (commented out, no need to re-graph)
-%Doesn't change, and it's re-calculated unless you run "TempCorrCoeffAll"
-%so don't plot it every time
-OverlapPlot = figure('name','OverlapPlot');
-pcolor(dates,dates,overlap);
-shading flat
-axis square
-colorbar%('location','southoutside')
-title('Topological overlap between all time steps')
-%xlabel('Month (m)')
-%ylabel('Month (n)')
-%Set Ticks
-labels = datestr(dates(1:12:120), 'yyyy');
-set(gca, 'XTick', dates(1:12:120));
-set(gca, 'XTickLabel', labels);
-set(gca, 'YTick', dates(1:12:120));
-set(gca, 'YTickLabel', labels);
-rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
-                         % mathworks forums. refer to liscensing info 
-set(gca,'FontSize',12)
-set(findall(gcf,'type','text'),'FontSize',12)
+% %Doesn't change, and it's re-calculated unless you run "TempCorrCoeffAll"
+% %so don't plot it every time
+% OverlapPlot = figure('name','OverlapPlot');
+% pcolor(dates,dates,overlap);
+% shading flat
+% axis square
+% colorbar%('location','southoutside')
+% title('Topological overlap between all time steps')
+% %xlabel('Month (m)')
+% %ylabel('Month (n)')
+% %Set Ticks
+% labels = datestr(dates(1:12:120), 'yyyy');
+% set(gca, 'XTick', dates(1:12:120));
+% set(gca, 'XTickLabel', labels);
+% set(gca, 'YTick', dates(1:12:120));
+% set(gca, 'YTickLabel', labels);
+% rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+%                          % mathworks forums. refer to liscensing info 
+% set(gca,'FontSize',12)
+% set(findall(gcf,'type','text'),'FontSize',12)
 %--------------------------------------------------------------------
 
 %-------------------------------------------------------------------
@@ -327,6 +327,49 @@ xlabel('Date')
 ylabel('<PNE>_m')%/<PNE>_m')
 title({'PNE of adopters and non-adopters per month'})
 hold off
+%% Assortativity by degree
+degreeAssort = figure('name','degreeAssort');
+plot(rk,'.','MarkerSize',10)
+labels = datestr(dates(1:12:120), 'yyyy');
+set(gca, 'XTick', dates(1:12:120));
+set(gca, 'XTickLabel', labels);
+rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+                         % mathworks forums. refer to liscensing info  
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+%Label Axes and Set Title
+xlabel('Date')
+ylabel('Assortativity coefficient r')%/<PNE>_m')
+title({'Assortativity of nodes by degree'})
+%% Assortativity by adopter/non-adopter
+adoptAssort = figure('name','adoptAssort');
+hold on
+plot(dates, r,'.m','MarkerSize',10)
+plot(dates, rAll,'.','MarkerSize',10)
+hold off
+label = legend('Adopters (in the time step)',...
+    'Adopters (adopt at any time)');
+set(label,'Location','NorthWest')
+labels = datestr(dates(1:12:120), 'yyyy');
+set(gca, 'XTick', dates(1:12:120));
+set(gca, 'XTickLabel', labels);
+rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+                         % mathworks forums. refer to liscensing info  
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+%Label Axes and Set Title
+xlabel('Date')
+ylabel('Assortativity coefficient r')%/<PNE>_m')
+title('Assortativity of adopters and non-adopters')
+
+%% Probability of Adoption given degree k
+ProbAgk = figure('name','ProbAgk');
+plot(PAgivenk,'.','MarkerSize',10) 
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+xlabel('degree (k)')
+ylabel('Probability of adoption')
+title('P(Adoption |degree = k)')
 %% % Save the graphs
 %% if...
 
@@ -348,17 +391,21 @@ print(NearestNeighbors,'-depsc','NearestNeighbors.eps');
 % close(NearestNeighbors)
 print(ProbDistk,'-depsc','ProbDistk.eps'); 
 % close(ProbDistk)
+print(PkGivenAdopt,'-depsc','PkGivenAdopt.eps'); 
 print(knnvsk,'-depsc','knnvsk.eps'); 
 % close(knnvsk)
 print(svsk,'-depsc','svsk.eps'); 
 % close(svsk)
 print(trans,'-depsc','trans.eps'); 
 % close(trans)
-print(OverlapPlot,'-depsc','overlap.eps'); 
+% print(OverlapPlot,'-depsc','overlap.eps'); 
 print(clusteringcoeff,'-depsc','clusteringcoeff.eps')
 % close(clusteringcoeff)
 print(PNEdiff,'-depsc','PNEdiff.eps')
 % close(PNEdiff)
+print(degreeAssort,'-depsc','degreeAssort.eps')
+print(adoptAssort,'-depsc','adoptAssort.eps')
+print(ProbAgk,'-depsc','ProbAgk.eps')
 
 if randomizeTime == 1
     cd('..')
