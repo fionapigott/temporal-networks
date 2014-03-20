@@ -215,14 +215,14 @@ hold off
 %% P
 ProbDistk = figure('name','ProbDistk');
 hold on
-plot(mean(POnlyParticipants,2),'k','LineWidth',2)
+plot((sum(N(2:end,:),2)/sum(sum(N(2:end,:),2))),'k','LineWidth',2)
 plot(POnlyParticipants(:,[1 59 117]))
-axis([1,80,0,.08])
+axis([1,100,0,.08])
 set(gca,'FontSize',12)
 set(findall(gcf,'type','text'),'FontSize',12)
 xlabel('degree (k)')
 ylabel('Fraction of nodes with degree k')
-label = legend('Avg for All Months','Jan 1998','Jan 2003','Dec 2007');
+label = legend('Total All Months','Jan 1998','Jan 2003','Dec 2007');
 set(label,'Location','NorthEast')
 title('Probability distribution of the degree of nodes in the network')
 if randomizeTime == 1
@@ -236,10 +236,10 @@ end
 hold off
 %-----------------------------------------------------------------------
 %% P(k_i = k| a_i = 1)
-PkGivenAdopt = figure('name','PkGivenAdopt.eps');
+PkGivenAdopt = figure('name','PkGivenAdopt');
 hold on
-plot((1:length(PAllNodes(:,1)))-1,mean(PAllNodes,2),'k','LineWidth',2)
-plot(mean(POnlyParticipants,2),'b','LineWidth',2)
+plot(0:(size(N,1)-1),(sum(N,2)/(numnodes*nummat)),'k','LineWidth',2)
+plot((sum(N(2:end,:),2)/sum(sum(N(2:end,:),2))),'b','LineWidth',2)
 plot((1:length(PkGivenAAll))-1,PkGivenAAll,'-og','LineWidth',1.5,'MarkerSize',3)
 plot((1:length(PkGivenA))-1,PkGivenA,'-om','LineWidth',1.5,'MarkerSize',3)
 axis([-1,max(max(k)),0,.3])
@@ -253,6 +253,20 @@ label = legend('P(k_i = k)','P(k_i = k|k_i \neq 0)','P(k_i = k|Adopted)',...
 set(label,'Location','NorthEast')
 title('Probabilty distribution of adoption')
 hold off
+
+PkGivenAdoptBox = figure('name','PkGivenAdoptBox');
+kvect = reshape(k,numnodes*nummat,1);
+kno0 = k(find(k~=0));
+groups = cell(length(kvect)+length(kno0)+length(tallyk)+length(tallykAll),1);
+groups(1:length(kvect)) = {' '};%{'Degree (all nodes)'};
+groups((1+length(kvect)):(length(kno0)+length(kvect))) = ...
+    {'  '};%{'Degree (participating nodes)'};
+groups((length(kno0)+length(kvect)+1):(length(kno0)+length(kvect)+length(tallyk))) =...
+    {'   '};%{'Degree of adopters (first time adopters)'};
+groups((length(kno0)+length(kvect)+length(tallyk)+1):...
+    (length(kno0)+length(kvect)+length(tallyk)+length(tallykAll))) =...
+    {'    '};%{'Degree of adopters (each transition)'};
+boxplot([kvect;kno0;tallyk;tallykAll],groups)
 
 %----------------------------------------------------------------------
 %% Overlap (commented out, no need to re-graph)

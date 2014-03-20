@@ -52,12 +52,14 @@ In the months May 2004 and November 2007, while the number of links between node
 Metrics showing adoption, or ``infection," over time. A first time adoption is the first time a node adopts, and each node can nay appear once in calculation involving first time adoptions. Generally, adoption only means a \(0 \rightarrow 1\) transition, and a node can transition more than once.
 
 \begin{figure}[H]
+\centering
 \includegraphics[width = .7\textwidth]{Graficos/AdoptersperMonth.eps}
 \caption{Plot showing the number of adopters per month. Note that the number of new adopters per month does not change greatly and the number of total adopters grows linearly.}
 \label{fig:AdoptersperMonth}
 \end{figure}
 
 \begin{figure}[H]
+\centering
 \includegraphics[width = .7\textwidth]{Graficos/trans.eps}
 \caption{Fluctuations per month. Green shows the number of people who transition from susceptible to infected (S \(\rightarrow\) I), red the number of people who transition from infected to recovered (I \(\rightarrow\) R), and black the net change in the total number of adoptions for the given month.}
 \label{fig:trans}
@@ -84,7 +86,7 @@ C_m = \frac{1}{\max [N(t_m),N(t_{m+1})]} \sum_{i = 1}^{N} C_i(t_m,t_{m+1})
 \label{eq:Cm2}
 \end{equation}
 
-Here, we average by the maximum number of nodes participating in the network, instead of the total number of possible participating nodes. The metric presented by \cite{3} averages by a fixed \(N\), the total number of nodes in the network, and thus gives a value that underestimates the topological overlap by the percentage of non-participating nodes.
+Here, we average by the maximum number of nodes participating in the network, instead of the total number of possible participating nodes. The metric presented by \cite{3} averages by a fixed \(N\), the total number of nodes in the network, and thus gives a value that underestimates the topological overlap by the percentage of non-participating nodes. further discussion of the difference between this metric and that presented in \cite{3} can be found in \cite{4}.
 
 And the average temporal overlap between any two temporally adjacent graphs (the \emph{temporal correlation coefficient}) in the series is given by:
 
@@ -98,8 +100,10 @@ For this time series, the temporal correlation coefficient is 0.5282. Note that 
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/overlap.eps}
 \label{fig:overlap}
-\caption{From the temporal correlation data, we can see that as time passes, the global changes in the graph progress evenly. That is, the graphs do not change more in the beginning than at the end of the observed window (the gradient from red to navy is not greater at the bottom left than the top right). We can also see that as time progresses the global features of the graphs overlap less and less. On average the topological overlap between a graph and its temporal neighbor is 0.5282, the temporal correlation coefficient. Between any two graphs, the average overlap is 0.2836, and between the two most separated graphs (the first and the last) the topological overlap drops to 0.1099, which can be said to be the stable kernel of the series. \newline However, that these figures only speak to global tendencies. Each neighborhood of each node changes differently, at a different rate and with significant monthly fluctuations, and it is interesting to note that every node \(i\) has at least one point where the temporal overlap between the neighborhood of \(i_m\) and \(i_{m+1}\) is equal to zero.}
+\caption{Topological overlap between every graph in the time series and every other graph in the time series.}
 \end{figure}
+
+From the temporal correlation data, we can see that as time passes, the global changes in the graph progress evenly. That is, the graphs do not change more in the beginning than at the end of the observed window (the gradient from red to navy is not greater at the bottom left than the top right). We can also see that as time progresses the global features of the graphs overlap less and less. On average the topological overlap between a graph and its temporal neighbor is 0.5282, the temporal correlation coefficient. Between any two graphs, the average overlap is 0.2836, and between the two most separated graphs (the first and the last) the topological overlap drops to 0.1099, which can be said to be the stable kernel of the series. \newline However, that these figures only speak to global tendencies. Each neighborhood of each node changes differently, at a different rate and with significant monthly fluctuations, and it is interesting to note that every node \(i\) has at least one point where the temporal overlap between the neighborhood of \(i_m\) and \(i_{m+1}\) is equal to zero.
 
 
 
@@ -142,8 +146,10 @@ On the social network, we can see that \(\frac{<k^2>}{<k>} \approx k_{nn}\), whi
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/svsk.eps}
 \label{fig:svsk}
-\caption{The data set used to construct these graphs also contains weight information (the number of times per month two phone number nodes call each other), but this analysis largely ignores edge weights (and node strength), instead simply using degree. The degree of a node can be used interchangeably with strength in this system, because \(k\) (degree, or the total number of edges of the node) is linearly related to \(s\) (strength, or the total weight of all edges of the node). This means that a node with many edges has the same average weight per edge as a node with very few edges. Indeed, the average weight of an edge on in the graph is \(10.3 \frac{calls}{connection}\), while the approximate slope of this line is \(9.9  \frac{calls}{connection}\). Larger deviation from this line for large \(k\) can likely be attributed to the fact that there are very few data points with very high degree.}
+\caption{Strength (sum of all of the weights of a node) versus degree (number of edges connected to the node).}
 \end{figure}
+
+The data set used to construct these graphs also contains weight information (the number of times per month two phone number nodes call each other), but this analysis largely ignores edge weights (and node strength), instead simply using degree. The degree of a node can be used interchangeably with strength in this system, because \(k\) (degree, or the total number of edges of the node) is linearly related to \(s\) (strength, or the total weight of all edges of the node). This means that a node with many edges has the same average weight per edge as a node with very few edges. Indeed, the average weight of an edge on in the graph is \(10.3 \frac{calls}{connection}\), while the approximate slope of this line is \(9.9  \frac{calls}{connection}\). Larger deviation from this line for large \(k\) can likely be attributed to the fact that there are very few data points with very high degree.
 
 \subsubsection*{Degree assortativity:}
 
@@ -174,34 +180,70 @@ For a network with no assortative mixing, \(q_j\) an d\(q_k\) are independent, a
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/ProbDistk.eps}
 \label{fig:ProbDistk}
-\caption{Because degree variation between time steps is small compared to degree variation between nodes (see fig \ref{fig:nn}) and we can see that the distribution of degree over the months remains roughly the same, it is possible to estimate the probability distribution of degree as the average of the probability distribution of degree in each month. This is convenient because it allows for comparison of node degree across months.}
+\caption{The probability density function of degree of a node in the social network.}
 \label{fig:Pk}
 \end{figure}
+
+Because degree variation between time steps is small compared to degree variation between nodes (see fig \ref{fig:nn}) and we can see that the distribution of degree over the months remains roughly the same, it is possible to estimate the probability distribution of degree during any month as the probability distribution of degree over all months. This is convenient because it allows for comparison of node degree across months.
 
 \subsubsection*{Clustering}
 
 A clustering coefficient can be used to show what fraction of the nodes in a graph are involved in triangles, or what the density of \emph{cliques} (sets of nodes where every node is connected to every other node) is in the graph.
 
+It is calculated as:
+
+\begin{equation}
+c_i = \frac{1}{k_i(k_i-1)}\sum_{j,h} a_{ij}a_{ih}a_{jh}
+\end{equation}
+
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/clusteringcoeff.eps}
 \label{fig:cluster}
-\caption{The clustering coefficient in the social network is very low. This is possibly because while there are clusters in the graph there are few sets where every node is connected to every other. As the degree of the nodes involved decreases, so does the likelihood of every involved node being directly connected.}
+\caption{The clustering coefficient in the network.}
 \end{figure}
+
+The clustering coefficient in the social network is very low. This is possibly because while there are clusters in the graph there are few sets where every node is connected to every other. As the degree of the nodes involved decreases, so does the likelihood of every involved node being directly connected.
 
 \section{Network topology and adoption}
 
+%\begin{figure}[H]
+%\includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/PkGivenAdopt.eps}
+%\label{fig:PkGivenAdopt}
+%\caption{A comparison of the degree of an adopting node at the time of adoption, and the degree of all nodes in the network.}
+%\label{fig:PkgA}
+%\end{figure}
+%
+%\begin{figure}[H]
+%\includegraphics[trim = 0cm 0cm 0cm 0cm, width = .6\textwidth]{Graficos/PkGivenAdoptBox.eps}
+%\label{fig:PkGivenAdoptBox}
+%\caption{The same data as figure \ref{fig:PkgA} in a box-and-whisker format.}
+%\label{fig:PkgAB}
+%\end{figure}
+
 \begin{figure}[H]
-\includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/PkGivenAdopt.eps}
-\label{fig:PkGivenAdopt}
-\caption{A comparison of the degree of an adopting node at the time of adoption, and the degree of all nodes in the network. We can see that an adopting node is likely to have a significantly higher degree than a non-adopting node: the mean degree of an adopting node is 17.2, while the mean degree of all nodes is 8.6 (for all nodes) or 11.8 (for only participating nodes). 85\% of all nodes and 80\% of participating nodes have less than the mean degree of an adopter (most, but not all,  adopters are participating nodes, so it is necessary to compare to both distributions of degree). That is to say, a group of adopters has a significantly higher degree than a randomly chosen group of nodes. \newline This comparison is meaningful for two reasons. One, the distribution of degree in general does not increase with time, so if the degree \(k_i\) of an adopting node \(i\) in some time step \(t_m\) is higher than average in \(t_m\) it can likely be said to be generally higher than average. Two, the network is not assortative for degree, so showing that adopters have generally higher degree does not simply mean that high degree nodes associate and are adopters.}
+    \begin{subfigure}[b]{.6\textwidth}
+\includegraphics[trim = 2cm 0cm 0cm 0cm, height = 9cm]{Graficos/PkGivenAdopt.eps}
 \label{fig:PkgA}
+\caption{Probability density function for degree of different groups of nodes.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{.4\textwidth}
+\includegraphics[trim = .5cm 1.4cm 0cm 0cm, height =9cm]{Graficos/PkGivenAdoptBox.eps}
+\label{fig:PkGivenAdoptBox}
+\caption{The same data in a box-and-whisker format.}
+    \end{subfigure}
+    \caption{A comparison of the degree of an adopting node at the time of adoption, and the degree of all nodes in the network.}
 \end{figure}
+
+We can see that an adopting node is likely to have a significantly higher degree than a non-adopting node: the mean degree of an adopting node is 17.2, while the mean degree of all nodes is 8.6 (for all nodes) or 11.9 (for only participating nodes). 83\% of all nodes and 77\% of participating nodes have less than the mean degree of an adopter (most, but not all,  adopters are participating nodes, so it is necessary to compare to both distributions of degree). That is to say, a group of adopters has a significantly higher degree than a randomly chosen group of nodes. \newline This comparison is meaningful for two reasons. One, the distribution of degree in general does not change significantly with time, so if the degree \(k_i\) of an adopting node \(i\) in some time step \(t_m\) is higher than average in \(t_m\) it can likely be said to be generally higher than average. Two, the network is not assortative for degree, so showing that adopters have generally higher degree does not simply mean that high degree nodes associate and are adopters.
 
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/ProbAgk.eps}
 \label{fig:ProbAgk}
-\caption{Fig (\ref{fig:PkgA}) gives the conditional probability \(P(K = k | Adopt)\) at the time of adoption, this figure gives \(P(Adopt | K = k)\), or the probability of the node adopting (first adoption only) when the degree is equal to \(k\). The same relationship holds in reverse: just as adopters have higher degree, nodes with a higher degree are more likely to be adopters. The probability that a node becomes an adopter at any time during the observed window is \(P(Adopt) = 0.25\), and it can be seen that nodes with a high degree are more likely to become adopters. For very high degree nodes probabilities are either 0 or 1 because there are only one or two data points for very high degrees.}
+\caption{The probability that a node will adopt, given its degree. \(P(K = k | Adopt)\) }
 \end{figure}
+
+Fig (\ref{fig:PkgA}) gives the conditional probability \(P(K = k | Adopt)\) at the time of adoption, this figure gives \(P(Adopt | K = k)\), or the probability of the node adopting (first adoption only) when the degree is equal to \(k\). The same relationship holds in reverse: just as adopters have higher degree, nodes with a higher degree are more likely to be adopters. The probability that a node becomes an adopter at any time during the observed window is \(P(Adopt) = 0.25\), and it can be seen that nodes with a high degree are more likely to become adopters. For very high degree nodes probabilities are either 0 or 1 because there are only one or two data points for very high degrees.
 
 Finally, we can discuss assortative mixing for any set of groups of nodes. In this case, we discuss assortative mixing of adopters in the network and define the \emph{assortativity coefficient} as:
 
@@ -214,8 +256,10 @@ where \(e_{ij}\) is the fraction of edges connecting a node of type \(i\) (adopt
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/adoptAssort.eps}
 \label{fig:adoptAssort}
-\caption{Assortative mixing of adopters in the social network. The series "Adopters (in the time step)" only looks at the assortativity of nodes who are currently adopters, while the series "Adopters (adopt at any time)" shows the assortativity of the group of people who, at some point, adopt. From this we can see that many adopters were connected well before adopting, and perhaps the group of people with the potential to adopt were previously connected for other reasons.}
+\caption{Assortative mixing of adopters in the social network. The series "Adopters (in the time step)" only looks at the assortativity of nodes who are currently adopters, while the series "Adopters (adopt at any time)" shows the assortativity of the group of people who, at some point, adopt. }
 \end{figure}
+
+From this we can see that many adopters were connected well before adopting, and perhaps the group of people with the potential to adopt were previously connected for other reasons.
 
 
 %
@@ -227,6 +271,7 @@ where \(e_{ij}\) is the fraction of edges connecting a node of type \(i\) (adopt
 \bibitem{1} M E J Newman. ``Assortative mixing in networks." 
 \bibitem{2} M E J Newman. ``Mixing patterns in networks."
 \bibitem{3} V Nicosia et al. ``Graph Metrics for Temporal Networks." 
+\bibitem{4} F Pigott, M Herrera. ``Proposal for a Correction to the Temporal Correlation Coefficient Calculation for Temporal Networks."
 \end{thebibliography}
 
 
