@@ -31,11 +31,11 @@
 
 The social network of this data set consists of phone number nodes (presumably corresponding to households or people) and phone call edges. The raw data lists of total phone calls between nodes in a given month for a span of ten years (from 1998 to 2007). These lists are directed (A calls B is different from B calls A) and aggregated monthly (all of the minutes of calls from A to B in one month are summed). The graphs (adjacency matrices) created from these lists are weighted and directed.
 
-Before any analysis is performed, the graphs are made undirected (A calls B is equivalent to B calls A) in the following way. If the relationship between two nodes is mutual in a given month (A calls B and B calls A), the total number of calls are summed, and that total is the weight of the edge between A and B. If the relationship between two nodes is not mutual in a given month (A calls B, but B does not call A), the edge is removed from the graph. Approximately 57\% of the edges are removed from the graph in this step.
+Before any analysis is performed, the graphs are made undirected (A calls B is equivalent to B calls A) in the following way. If the relationship between two nodes is mutual in a given month (A calls B and B calls A), the total number of calls are summed, and that total is the weight of the edge between A and B. If the relationship between two nodes is not mutual in a given month (A calls B, but B does not call A), the edge is removed from the graph. 57\% of the edges are removed from the graph in this step. To validate the assumption that one-way calls do not indicate a meaningful communication, we have re-run our analysis without removing these one-way connections, and found that our conclusions about degree assortativity on the graph, degree distribution of adopters and assortativity of adopters still hold. Furthermore, the average information preserved between time steps in the graph with these edges is lower than in the graph without (the temporal correlation coefficient, as defined in section \ref{sec:overlap} is 14\% lower in the graph that preserves one-way connections), which indicates that one-way connections are less permanent (and likely less influential) than two-way connections. 
 
 Most of the analysis in this paper makes use of an unweighted version of the graph, which is the same graph with all edge weights equal to one.
 
-Note that after the above treatment, only about 2/3 of the listed nodes are participating in the network at any given time. Because this is a significant percentage, corrections are made to remove non-participating nodes from relevant calculations.
+After the above treatment, only about 2/3 of the listed nodes are participating in the network at any given time. Because this is a significant percentage, corrections are made to remove non-participating nodes from relevant calculations.
 
 \subsection{Adoption data}
 Raw infection data is given as a matrix with dimension (nodes) X (time steps), where if a node has internet service in a given month, that entry is equal to one and no internet service is denoted by a zero. Until 2003 the only internet service available was dial-up, and even after 2003 dial up was the most common form of internet service. Dial-up only charges per connection, so a user that begins using internet may not use it every month afterwords. This fluctuation between \(1 \rightarrow 0 \rightarrow 1\) is common in the time series, and accounted for by treating \(0\) users as susceptible entities.
@@ -68,6 +68,7 @@ Metrics showing adoption, or ``infection," over time. A first time adoption is t
 \section{Topology of the social network over time}
 
 \subsection{Neighborhood topological overlap}
+\label{sec:overlap}
 
 To asses the changes between temporally adjacent graphs in the time-evolving network, we measure the topological overlap between graphs in the time series. We use a variation on the temporal correlation coefficient presented in \cite{3}, where our variation corrects for the large number of temporally disconnected nodes in the time series.
 
@@ -96,6 +97,8 @@ C = \frac{1}{M-1}\sum_{m=1}^{M-1}  \left( \frac{1}{\max [N(t_m),N(t_{m+1})]} \su
 \end{equation}
 
 For this time series, the temporal correlation coefficient is 0.5282. Note that using the metric in \cite{3}, the temporal correlation coefficient result is 0.3834.
+
+
 
 \begin{figure}[H]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, width = .9\textwidth]{Graficos/overlap.eps}
@@ -233,6 +236,7 @@ The clustering coefficient in the social network is very low. This is possibly b
 \caption{The same data in a box-and-whisker format.}
     \end{subfigure}
     \caption{A comparison of the degree of an adopting node at the time of adoption, and the degree of all nodes in the network.}
+        \label{fig:PkgA}
 \end{figure}
 
 We can see that an adopting node is likely to have a significantly higher degree than a non-adopting node: the mean degree of an adopting node is 17.2, while the mean degree of all nodes is 8.6 (for all nodes) or 11.9 (for only participating nodes). 83\% of all nodes and 77\% of participating nodes have less than the mean degree of an adopter (most, but not all,  adopters are participating nodes, so it is necessary to compare to both distributions of degree). That is to say, a group of adopters has a significantly higher degree than a randomly chosen group of nodes. \newline This comparison is meaningful for two reasons. One, the distribution of degree in general does not change significantly with time, so if the degree \(k_i\) of an adopting node \(i\) in some time step \(t_m\) is higher than average in \(t_m\) it can likely be said to be generally higher than average. Two, the network is not assortative for degree, so showing that adopters have generally higher degree does not simply mean that high degree nodes associate and are adopters.
@@ -243,12 +247,12 @@ We can see that an adopting node is likely to have a significantly higher degree
 \caption{The probability that a node will adopt, given its degree. \(P(K = k | Adopt)\) }
 \end{figure}
 
-Fig (\ref{fig:PkgA}) gives the conditional probability \(P(K = k | Adopt)\) at the time of adoption, this figure gives \(P(Adopt | K = k)\), or the probability of the node adopting (first adoption only) when the degree is equal to \(k\). The same relationship holds in reverse: just as adopters have higher degree, nodes with a higher degree are more likely to be adopters. The probability that a node becomes an adopter at any time during the observed window is \(P(Adopt) = 0.25\), and it can be seen that nodes with a high degree are more likely to become adopters. For very high degree nodes probabilities are either 0 or 1 because there are only one or two data points for very high degrees.
+Fig \ref{fig:PkgA} gives the conditional probability \(P(K = k | Adopt)\) at the time of adoption, this figure gives \(P(Adopt | K = k)\), or the probability of the node adopting (first adoption only) when the degree is equal to \(k\). The same relationship holds in reverse: just as adopters have higher degree, nodes with a higher degree are more likely to be adopters. The probability that a node becomes an adopter at any time during the observed window is \(P(Adopt) = 0.25\), and it can be seen that nodes with a high degree are more likely to become adopters. For very high degree nodes probabilities are either 0 or 1 because there are only one or two data points for very high degrees.
 
 Finally, we can discuss assortative mixing for any set of groups of nodes. In this case, we discuss assortative mixing of adopters in the network and define the \emph{assortativity coefficient} as:
 
 \begin{equation}
-r = \frac{\sum_i e_{ii} - \sum_i a_i b_i}{1 - \sum_i a_i b_i} = \frac{Tr \mathbf{e} - || \mathbf{e}^2||}{1 - || \mathbf{e}^2||}
+r = \frac{\sum_i e_{ii} - \sum_i a_i b_i}{1 - \sum_i a_i b_i} = \frac{\text{Tr} \mathbf{e} - || \mathbf{e}^2||}{1 - || \mathbf{e}^2||}
 \end{equation}
 
 where \(e_{ij}\) is the fraction of edges connecting a node of type \(i\) (adopter) to a node of type \(j\) (non-adopter) and \(a_i\) and \(b_i\) are the fraction of each type of an end of an edge attached to a vertex of type \(i\). For perfectly assortative mixing \(r = 1\) and for non-assortative mixing \(r = 0\) \cite{1}.
