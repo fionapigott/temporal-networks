@@ -145,12 +145,34 @@ if randomizeInfection == 1
     title({'Total Adopters per month vs GNE per month';...
         'for randomly generated infection data'})
 end
+
+%% Graph the exposure for each month vs total adopters per month-----------
+% based on the neighborhood overlap of the users 
+ExpvsTotalAdopters = figure('name','ExpvsTotalAdopters');
+hold on
+plot(sum(Adoption,1),sum(PNE_NeighborOverlap),'.') 
+x = 1:max(sum(Adoption,1));
+line = polyfit(sum(Adoption,1),sum(PNE_NeighborOverlap),1);
+plot(x,x*line(1)+line(2))
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+%Label Axes and Set Title
+xlabel('Total Internet Adopters')
+ylabel('Network Exposure based on Neighborhood Overlap')
+title('Exposure per month vs total adopters per month')
+slope = num2str(roundn(line(1),-2));
+int = num2str(roundn(line(2),-2));
+text(x(end)-10,x(end)/2*line(1)+line(2),{'Adoption(Exposure) = ',[slope,...
+     '*Exposure + ',int]},... 
+     'HorizontalAlignment','right',...
+     'FontSize',12);
+clear line
 %% Graph nearest neighbors for each month vs time-----------------------
 NearestNeighbors = figure('name','NearestNeighbors');
 hold on
 plot(dates, averagek,'-ob','MarkerSize',3);
-plot(dates, R, '-or','MarkerSize',3);
 plot(dates,averageknn,'-og','MarkerSize',3);
+plot(dates, R, '-or','MarkerSize',3);
 axis([dates(1) dates(end) 0 max(averageknn)+5])
 %Set Ticks
 labels = datestr(dates(1:12:117), 'yyyy');
@@ -164,7 +186,7 @@ set(findall(gcf,'type','text'),'FontSize',12);
 xlabel('Date')
 ylabel('Degree')
 title('Degree Estimations vs Time')
-label = legend('<k>','<k^2>/<k>','<k_{nn}>');
+label = legend('<k>','<k_{nn}>','<k^2>/<k>');
 set(label,'Location','NorthEast');
 clear label
 if randomizeTime == 1
@@ -358,9 +380,10 @@ title({'Assortativity of nodes by degree'})
 %% Assortativity by adopter/non-adopter
 adoptAssort = figure('name','adoptAssort');
 hold on
-plot(dates, r,'.m','MarkerSize',10)
+plot(dates, r,'ob','MarkerSize',5)
 plot(dates, rAll,'.','MarkerSize',10)
-hold off
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
 label = legend('Adopters (in the time step)',...
     'Adopters (adopt at any time)');
 set(label,'Location','NorthWest')
@@ -369,12 +392,11 @@ set(gca, 'XTick', dates(1:12:120));
 set(gca, 'XTickLabel', labels);
 rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
                          % mathworks forums. refer to liscensing info  
-set(gca,'FontSize',12)
-set(findall(gcf,'type','text'),'FontSize',12)
 %Label Axes and Set Title
 xlabel('Date')
 ylabel('Assortativity coefficient r')%/<PNE>_m')
 title('Assortativity of adopters and non-adopters')
+hold off
 
 %% Probability of Adoption given degree k
 ProbAgk = figure('name','ProbAgk');
@@ -384,6 +406,20 @@ set(findall(gcf,'type','text'),'FontSize',12)
 xlabel('degree (k)')
 ylabel('Probability of adoption')
 title('P(Adoption |degree = k)')
+
+%% Size of the adopted component
+giantAdopt = figure('name','giantAdopt');
+plot(dates, giantAdoptedComp,'.','MarkerSize',10)
+set(gca,'FontSize',12)
+set(findall(gcf,'type','text'),'FontSize',12)
+labels = datestr(dates(1:12:120), 'yyyy');
+set(gca, 'XTick', dates(1:12:120));
+set(gca, 'XTickLabel', labels);
+rotateXLabels( gca, 30 ) % rotateXLabel is a function downloaded from
+                         % mathworks forums. refer to liscensing info  
+xlabel('Date')
+ylabel('Fraction of the adopters connected in one giant component')
+title('Size of the largest purely adopter component')
 %% % Save the graphs
 %% if...
 
@@ -420,6 +456,7 @@ print(PNEdiff,'-depsc','PNEdiff.eps')
 print(degreeAssort,'-depsc','degreeAssort.eps')
 print(adoptAssort,'-depsc','adoptAssort.eps')
 print(ProbAgk,'-depsc','ProbAgk.eps')
+print(giantAdopt,'-depsc','giantAdopt.eps')
 
 if randomizeTime == 1
     cd('..')

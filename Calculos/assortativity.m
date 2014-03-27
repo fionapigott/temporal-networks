@@ -13,6 +13,8 @@
 % to link to adopters.
 % r > 0 -> assortative network, to some degree
 
+% INPUT: 'Adoption.mat', 'Graphs.mat'
+
 % OUTPUT: r, a vector with length (# of time steps) that gives the
 %         assortativity coefficient for adoption over time.
 %         rk, a vector with length (# of time steps) that gives the
@@ -21,6 +23,7 @@
 % initialize values
 mixingMat = zeros(2,2,nummat);
 r = zeros(1,nummat);
+rAll = r;
 
 % Pick category criteria.
 % In this case, I am looking for the assortativity between the group of 
@@ -31,10 +34,44 @@ A = repmat((sum(Adoption,2)>0)',[numnodes, 1]); % potential to adopt
 
 % r is a scalar value for each month
 for m = 1:nummat
+    
+    % number of links, without double counting, (the matrix is symmetric)
+    All = sum(sum(triu(unweighted(:,:,m)))); 
+    % links between adopters
+    AtoA = sum(sum(triu(((A & A') & unweighted(:,:,m)))));
+    % links that have at least one adopter
+    AtoAny = sum(sum(triu(((A | A') & unweighted(:,:,m)))));
+    % links that have no adopters
+    NtoN = All - AtoAny;
+    % links from one adopter to one non-adopter
+    NtoA = AtoAny - AtoA;
+    
+    % define the mixing matrix, as outlined by Newman in ref [1]
+    mixingMat(:,:,m) = [AtoA, NtoA/2; NtoA/2, NtoN]./All;
+    % calculate the assortativity coefficient as given in ref [1]
+    rAll(m) = (trace(mixingMat(:,:,m)) - sum(sum(mixingMat(:,:,m)^2)))...
+        /(1-sum(sum(mixingMat(:,:,m)^2)));
+    
+    % pick a time step to evaluate error, to get a feel for the 
+    % error (too costly to calculate for every time step, and it shouldn't
+    % change much).
+    % error eq from ref [1]
+    if m == ceil(nummat/2)
+        error = (1/All)*(sum(sum(mixingMat(:,:,m)^2))+...
+            sum(sum(mixingMat(:,:,m)^2))^2 - ...
+            sum(sum(mixingMat(:,:,m)^2*mixingMat(:,:,m)')) - ...
+            sum(sum(mixingMat(:,:,m)*mixingMat(:,:,m)'^2)))...
+            /(1-sum(sum(mixingMat(:,:,m)^2)));
+    end   
+end
+
+clear A
+
+for m = 1:nummat
 
     % % An alternative to the category of potential adopters, we can look
     % % at the assortativity of the group of adopters in a particular month
-    % A = repmat(Adoption(:,m)',[numnodes, 1]); % actual adoption
+    A = repmat(Adoption(:,m)',[numnodes, 1]); % actual adoption
     
     % number of links, without double counting, (the matrix is symmetric)
     All = sum(sum(triu(unweighted(:,:,m)))); 
@@ -71,9 +108,6 @@ clear A All AtoA NtoN NtoA
 % Evaluate degree assortativity of the network
 % as defined in ref [2]
 
-% initialize a matrix to hold the scalar properties of links that 
-% we are interested in.
-properties = cell(1,nummat);
 rk = zeros(1,nummat);
 
 % rk is calculated for every time step
@@ -85,22 +119,18 @@ for m = 1:nummat
     fromk = zeros(size(from));
     tok = zeros(size(to));
     % find the degree of the start and end nodes and store
-    for ii = 1:length(from)
-        fromk(ii) = k(from(ii),m);
-        tok(ii) = k(to(ii),m);
-    end
+    fromk = k(from,m);
+    tok = k(to,m);
     % properties{m} = [node 1 in an edge, node 2 in an edge, ...
     %                  k of node 1, k of node 2]
-    properties{m} = [from, to, fromk, tok];
+    % properties{m} = [from, to, fromk, tok];
     
     % 1/M, M = the total number of edges involved in the graph at t = m
     Minv = 1/length(from);
     
     % eveluate r as given in ref [2]
-    rk(m) = (Minv*sum(properties{m}(:,3).*properties{m}(:,4)) - ...
-        (Minv/2*sum(properties{m}(:,3)+properties{m}(:,4)))^2)/...
-        (Minv/2*sum(properties{m}(:,3).^2+properties{m}(:,4).^2)+...
-        (Minv/2*sum(properties{m}(:,3)+properties{m}(:,4)))^2); 
+    rk(m) = ( sum(fromk.*tok)*Minv - (sum(0.5*(fromk+tok))*Minv)^2 ) / ...
+    ( sum(0.5*(fromk.^2+tok.^2))*Minv - (sum(0.5*(fromk+tok))*Minv)^2 );
 end
 
-clear properties Minv m from fromk to tok ii
+clear Minv m from fromk to tok ii
